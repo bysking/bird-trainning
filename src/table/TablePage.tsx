@@ -4,6 +4,7 @@
 
 import { defineComponent, ref } from "@vue/composition-api";
 import TableSort from "./components/sort/TableSort";
+import TablePagenation from "./components/pagination/TablePagenation";
 import "./style.less";
 
 export default defineComponent({
@@ -21,6 +22,7 @@ export default defineComponent({
   },
   components: {
     TableSort,
+    TablePagenation,
   },
   setup(props, {}) {
     const curSort: any = ref({
@@ -44,57 +46,86 @@ export default defineComponent({
       console.log(curSort.value);
     };
 
-    const getValue = () => {
-      return curSort.value.a + curSort.value.b;
+    const pageChange = (val: any) => {
+      console.log("分页变化", val);
+    };
+
+    const renderSort = (column: any) => {
+      if (!column.sort) {
+        return "";
+      }
+
+      return (
+        <table-sort
+          on={{ tableSort: tableSort }}
+          sortKey={column.key}
+          props={{ defaultSort: curSort.value }}
+          class="hd__sort"
+        ></table-sort>
+      );
+    };
+
+    const renderHead = (columns: any[]) => {
+      let template = columns.map((column: any) => {
+        return (
+          <th>
+            <div class="table-hd-tr-th">
+              <div class="hd__title">{column.title}</div>
+              {renderSort(column)}
+            </div>
+          </th>
+        );
+      });
+
+      return template;
+    };
+
+    const renderBody = (rowList: any[], columns: any) => {
+      function getColCfg(index: number) {
+        return props.tableConfig.columns[index];
+      }
+      function renderTd(tds: any[], columns: any[]) {
+        let newTDS = columns.map((col) => {
+          return <td>{tds[col.key]}</td>;
+        });
+
+        return newTDS;
+      }
+      let newRowList = rowList.map((row, index) => {
+        let headerCfg = getColCfg(index);
+
+        if (!headerCfg) {
+          return "";
+        }
+        return <tr>{renderTd(row, columns)}</tr>;
+      });
+
+      return newRowList;
+    };
+
+    const renderFoot = () => {
+      let columns = props.tableConfig.columns || [];
+
+      return (
+        <td colspan={columns.length}>
+          <table-pagenation on={{ pageChange: pageChange }}></table-pagenation>
+        </td>
+      );
     };
 
     return () => {
+      let columns = props.tableConfig.columns || [];
+      let rowList = props.tableConfig.data || [];
       return (
         <div>
           <table>
-            <caption>{getValue()}</caption>
+            <caption>测试表格</caption>
             <thead>
-              <tr>
-                <th>
-                  <div class="table-hd-tr-th">
-                    <div class="hd__title">第一列</div>
-                    <table-sort
-                      on={{ tableSort: tableSort }}
-                      sortKey="a"
-                      props={{ defaultSort: curSort.value }}
-                      class="hd__sort"
-                    ></table-sort>
-                  </div>
-                </th>
-                <th>
-                  <div class="table-hd-tr-th">
-                    <div class="hd__title">第一列</div>
-                    <table-sort
-                      on={{ tableSort: tableSort }}
-                      props={{ defaultSort: curSort.value }}
-                      sortKey="b"
-                      class="hd__sort"
-                    ></table-sort>
-                  </div>
-                </th>
-              </tr>
+              <tr>{renderHead(columns)}</tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>第一列</td>
-                <td>第一列</td>
-                <td>第一列</td>
-              </tr>
-              <tr>
-                <td>第一列</td>
-                <td>第一列</td>
-                <td>第一列</td>
-              </tr>
-            </tbody>
+            <tbody>{renderBody(rowList, columns)}</tbody>
             <tfoot>
-              <tr>
-                <td>表格尾部</td>
-              </tr>
+              <tr>{renderFoot()}</tr>
             </tfoot>
           </table>
         </div>

@@ -2,24 +2,24 @@
  * Created by uedc on 2021/10/11.
  */
 
-import { computed, defineComponent } from "@vue/composition-api";
-import { TablePublicProps, tableProps } from "./types";
+import { defineComponent } from "@vue/composition-api";
+import { tableProps } from "./types";
 import TablePage from "./TablePage";
 
 const tableConfig = {
   columns: [
     {
-      title: "Name",
+      title: "姓名",
       key: "name",
       sort: true,
       defaultSort: "ASC",
     },
     {
-      title: "Age",
+      title: "年龄",
       key: "age",
     },
     {
-      title: "Address",
+      title: "地址",
       key: "address",
     },
   ],
@@ -58,22 +58,12 @@ export default defineComponent({
     TablePage,
   },
   setup(props, { slots }) {
-    const classes = useClasses(props);
-
     return () => {
       return (
         <div>
-          <TablePage props={tableConfig}></TablePage>
+          <TablePage props={{ tableConfig: tableConfig }}></TablePage>
         </div>
       );
     };
   },
 });
-
-function useClasses(props: TablePublicProps) {
-  return computed(() => {
-    return {
-      "test-class": props?.test,
-    };
-  });
-}

@@ -1,0 +1,48 @@
+.page-btn {
+  display: inline-block;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-right: 4px;
+  overflow: auto;
+  min-width: 32px;
+  max-width: 48px;
+
+  &:hover {
+    background-color: rgb(71, 71, 224);
+  }
+}
+
+.page-btn-click {
+  display: inline-block;
+  border: 1px solid #ddd;
+  text-align: center;
+  cursor: pointer;
+  padding: 4px 8px;
+  margin-right: 4px;
+
+  &:hover {
+    background-color: rgb(71, 71, 224);
+  }
+}
+
+.page-btn__active {
+  background-color: rgb(71, 71, 224);
+}
+
+.pagenation-wrap {
+  display: flex;
+  justify-content: flex-end;
+
+  .page-num-list {
+    width: 288px;
+    text-align: center;
+  }
+
+  .page-btn-cur {
+    display: inline-block;
+    line-height: 35px;
+    margin-right: 16px;
+  }
+}

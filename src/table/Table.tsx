@@ -11,12 +11,12 @@ const tableConfig = {
     {
       title: "姓名",
       key: "name",
-      sort: true,
-      defaultSort: "ASC",
     },
     {
       title: "年龄",
       key: "age",
+      sort: true,
+      defaultSort: "ASC",
     },
     {
       title: "地址",
@@ -48,6 +48,36 @@ const tableConfig = {
       address: "Ottawa No. 2 Lake Park",
       date: "2016-10-04",
     },
+    {
+      name: "Jon Snow1",
+      age: 27,
+      address: "Ottawa No. 2 Lake Park",
+      date: "2016-10-04",
+    },
+    {
+      name: "Jon Snow2",
+      age: 28,
+      address: "Ottawa No. 2 Lake Park",
+      date: "2016-10-04",
+    },
+    {
+      name: "Jon Snow3",
+      age: 29,
+      address: "Ottawa No. 2 Lake Park",
+      date: "2016-10-04",
+    },
+    {
+      name: "Jon Snow4",
+      age: 76,
+      address: "Ottawa No. 2 Lake Park",
+      date: "2016-10-04",
+    },
+    {
+      name: "Jon Snow5",
+      age: 86,
+      address: "Ottawa No. 2 Lake Park",
+      date: "2016-10-04",
+    },
   ],
 };
 
@@ -61,7 +91,9 @@ export default defineComponent({
     return () => {
       return (
         <div>
-          <TablePage props={{ tableConfig: tableConfig }}></TablePage>
+          <TablePage
+            props={{ tableConfig: tableConfig, list: tableConfig.data }}
+          ></TablePage>
         </div>
       );
     };

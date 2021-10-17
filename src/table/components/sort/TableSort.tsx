@@ -35,20 +35,23 @@ export default defineComponent({
       }
     );
 
-    const clickSort = (key: string) => {
+    const setSortKey = (key: string) => {
       if (activeKey.value === key) {
         activeKey.value = "";
       } else {
         activeKey.value = key;
       }
+    };
 
+    const clickSort = (key: string) => {
+      setSortKey(key);
       emit("tableSort", props.sortKey, activeKey.value);
-      console.log("触发排序事件", props.sortKey, activeKey.value);
     };
 
     if (props.defaultSort) {
       let sort = props.defaultSort[props.sortKey];
-      sort && clickSort(sort);
+
+      sort && setSortKey(sort);
     }
 
     const getActiveByKey = (key: string) => {

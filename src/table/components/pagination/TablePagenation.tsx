@@ -97,7 +97,9 @@ export default defineComponent({
     return () => {
       return (
         <div class="pagenation-wrap">
-          <div class="page-btn-cur"> 当前页码： {curPage.value}</div>
+          <div class="page-btn-cur">
+            当前页码： {curPage.value}/{pageTotal.value}
+          </div>
           <div class="page-btn-click" onClick={moveFront}>
             上一页
           </div>

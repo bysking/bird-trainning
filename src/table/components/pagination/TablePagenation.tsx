@@ -81,7 +81,7 @@ export default defineComponent({
         }
       }
 
-      return showList.value.map((item) => {
+      return showList.value.map((item: number) => {
         return (
           <span
             class={

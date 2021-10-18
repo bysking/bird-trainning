@@ -74,6 +74,7 @@ export default defineComponent({
         <div class="sort-wrap">
           <div
             class={uhdClass.value}
+            id="upSort"
             onClick={clickSort.bind(this, SORT_KEY.ASC)}
           >
             u

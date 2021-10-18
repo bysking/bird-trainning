@@ -25,7 +25,9 @@ export default defineComponent({
     tableConfig: {
       // 表格配置
       type: Object,
-      default: () => ({}),
+      default: function () {
+        return {};
+      },
     },
     isLocalPage: {
       type: Boolean,
@@ -46,9 +48,9 @@ export default defineComponent({
   },
   setup(props, {}) {
     const singleSortKey = ref("");
-    const getSortObj = () => {
+    const getSortObj: () => Record<string, "ASC" | "DESC"> = () => {
       let columns = props.tableConfig.columns || [];
-      let obj: any = {};
+      let obj: Record<string, "ASC" | "DESC"> = {};
 
       columns.forEach((col: any) => {
         if (col.sort) {
@@ -63,7 +65,7 @@ export default defineComponent({
     const curSort: any = ref(obj);
     const tableTotalList: Ref<any[] | undefined> = ref([]);
 
-    tableTotalList.value = cloneDeep(props.list);
+    tableTotalList.value = cloneDeep(props.list || []);
 
     if (props.singleSort) {
       curSort.value = {
@@ -81,12 +83,24 @@ export default defineComponent({
       getRenderList(pageConfig.value.pageNo);
     };
 
-    const pageConfig = ref({
-      pageSize: 3, //一页的数据条数
-      pageNo: 2, //当前页的索引
-      total: 9, //总的数据条数
-      pageTotal: 3, //总的页数
-    });
+    // 处理本地分页的页面配置计算
+    const getPageConfig = () => {
+      let defaultPageSize = 4; // 默认分页数量，可以抽成配置项
+      let listLen = (tableTotalList.value || []).length;
+
+      let isIntPage = listLen % defaultPageSize === 0;
+      let tempPage = Math.floor(listLen / defaultPageSize);
+      let pageTotal = isIntPage ? tempPage : tempPage + 1;
+
+      return {
+        pageSize: defaultPageSize, //一页的数据条数
+        pageNo: 1, //当前页的索引
+        total: listLen, //总的数据条数
+        pageTotal, //总的页数
+      };
+    };
+
+    const pageConfig = ref(getPageConfig());
 
     const renderRowList: any = ref([]);
 
@@ -126,13 +140,14 @@ export default defineComponent({
     };
 
     const loadListByPageAjax = () => {
-      return [];
+      return []; // cpx:todo 远程分页待做
     };
 
     const handleListSort = (list: any[]) => {
       let sortFn: any = props.sortFn || SORT_FN;
       return sortFn(list, curSort.value);
     };
+
     const handleListByPage = (list: any) => {
       let { pageSize, pageNo } = pageConfig.value;
 
@@ -194,6 +209,7 @@ export default defineComponent({
             <thead>
               <tr>{renderHead(columns)}</tr>
             </thead>
+            {/* cpx:todo 空状态处理 */}
             <tbody>{renderBody(renderRowList.value, columns)}</tbody>
             <tfoot>
               <tr>{renderFoot()}</tr>

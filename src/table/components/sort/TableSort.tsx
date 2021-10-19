@@ -4,13 +4,14 @@
 
 import { defineComponent, computed, ref, watch } from "@vue/composition-api";
 import "./style.less";
+import { TableSortProp } from "./types";
 
 const SORT_KEY = {
   ASC: "ASC",
   DESC: "DESC",
 };
 
-export default defineComponent({
+export default defineComponent<TableSortProp>({
   name: "TableSort",
   props: {
     sortKey: {

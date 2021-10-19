@@ -2,10 +2,18 @@
  * Created by uedc on 2021/10/11.
  */
 
-import { defineComponent, ref, computed, watch } from "@vue/composition-api";
+import {
+  defineComponent,
+  ref,
+  computed,
+  watch,
+  ComputedRef,
+  Ref,
+} from "@vue/composition-api";
 import "./style.less";
+import { PagenationProp } from "./types";
 
-export default defineComponent({
+export default defineComponent<PagenationProp>({
   name: "TablePagenation",
   props: {
     pageConfig: {
@@ -20,7 +28,7 @@ export default defineComponent({
   },
   components: {},
   setup(props, { emit }) {
-    const pageTotal = computed(() => {
+    const pageTotal: ComputedRef<number> = computed(() => {
       const config = props.pageConfig;
       if (config.pageTotal) {
         return config.pageTotal;
@@ -56,7 +64,7 @@ export default defineComponent({
       curPage.value = pageIndex;
     };
 
-    const showList: any = ref([]);
+    const showList: Ref<number[]> = ref([]);
 
     const renderPage = () => {
       let showListTotal = Array(pageTotal.value)

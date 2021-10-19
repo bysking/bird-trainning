@@ -8,6 +8,7 @@ import TableSort from "./components/sort/TableSort";
 import TablePagenation from "./components/pagination/TablePagenation";
 import { cloneDeep, orderBy } from "lodash";
 import "./style.less";
+import { TablePagePropType, TableHeaderConfig, SortType } from "./types";
 
 const SORT_FN = (list: any[], keyMap: string): any[] => {
   let key: any = Object.keys(keyMap)[0]; // 排序字段
@@ -15,7 +16,7 @@ const SORT_FN = (list: any[], keyMap: string): any[] => {
   return orderBy(list, [key], [keyVal]); // todo 可以支持多维度排序
 };
 
-export default defineComponent({
+export default defineComponent<TablePagePropType>({
   name: "TablePage",
   props: {
     singleSort: {
@@ -35,7 +36,7 @@ export default defineComponent({
     },
     list: {
       type: Array,
-      defult: () => [],
+      default: () => [],
     },
     sortFn: {
       type: Function,
@@ -46,13 +47,13 @@ export default defineComponent({
     TableSort,
     TablePagenation,
   },
-  setup(props, {}) {
+  setup(props) {
     const singleSortKey = ref("");
-    const getSortObj: () => Record<string, "ASC" | "DESC"> = () => {
+    const getSortObj: () => Record<string, SortType> = () => {
       let columns = props.tableConfig.columns || [];
-      let obj: Record<string, "ASC" | "DESC"> = {};
+      let obj: Record<string, SortType> = {};
 
-      columns.forEach((col: any) => {
+      columns.forEach((col: TableHeaderConfig) => {
         if (col.sort) {
           obj[col.key] = col.defaultSort || "";
           singleSortKey.value = col.key;
@@ -62,8 +63,8 @@ export default defineComponent({
       return obj;
     };
     let obj = getSortObj();
-    const curSort: any = ref(obj);
-    const tableTotalList: Ref<any[] | undefined> = ref([]);
+    const curSort: Ref<Record<string, SortType>> = ref(obj);
+    const tableTotalList: Ref<Record<string, any>[]> = ref([]);
 
     tableTotalList.value = cloneDeep(props.list || []);
 
@@ -72,7 +73,7 @@ export default defineComponent({
         [singleSortKey.value]: "ASC",
       };
     }
-    const tableSort = (sortKey: string, sort: string) => {
+    const tableSort = (sortKey: string, sort: SortType) => {
       if (props.singleSort) {
         curSort.value = {
           [sortKey]: sort,
@@ -102,9 +103,9 @@ export default defineComponent({
 
     const pageConfig = ref(getPageConfig());
 
-    const renderRowList: any = ref([]);
+    const renderRowList: Ref<Record<string, any>[]> = ref([]);
 
-    const pageChange = (val: any) => {
+    const pageChange = (val: number) => {
       pageConfig.value.pageNo = val;
       getRenderList(val);
     };
@@ -124,8 +125,8 @@ export default defineComponent({
       );
     };
 
-    const renderHead = (columns: any[]) => {
-      let template = columns.map((column: any) => {
+    const renderHead = (columns: TableHeaderConfig[]) => {
+      let template = columns.map((column: TableHeaderConfig) => {
         return (
           <th>
             <div class="table-hd-tr-th">
@@ -139,16 +140,16 @@ export default defineComponent({
       return template;
     };
 
-    const loadListByPageAjax = () => {
+    const loadListByPageAjax: () => Record<string, any>[] = () => {
       return []; // cpx:todo 远程分页待做
     };
 
-    const handleListSort = (list: any[]) => {
-      let sortFn: any = props.sortFn || SORT_FN;
+    const handleListSort = (list: Record<string, any>[]) => {
+      let sortFn = props.sortFn || SORT_FN;
       return sortFn(list, curSort.value);
     };
 
-    const handleListByPage = (list: any) => {
+    const handleListByPage = (list: Record<string, any>[]) => {
       let { pageSize, pageNo } = pageConfig.value;
 
       let start = (pageNo - 1) * pageSize;
@@ -171,16 +172,22 @@ export default defineComponent({
 
     getRenderList();
 
-    const renderBody = (rowList: any[], columns: any) => {
-      function renderTd(tds: any[], columns: any[]) {
+    const renderBody = (
+      rowList: Record<string, any>[],
+      columns: TableHeaderConfig[]
+    ) => {
+      function renderTd(
+        row: Record<string, any>,
+        columns: TableHeaderConfig[]
+      ) {
         let newTDS = columns.map((col) => {
-          return <td>{tds[col.key]}</td>;
+          return <td>{row[col.key]}</td>;
         });
 
         return newTDS;
       }
 
-      let newRowList = renderRowList.value.map((row: any) => {
+      let newRowList = renderRowList.value.map((row: Record<string, any>) => {
         return <tr>{renderTd(row, columns)}</tr>;
       });
 

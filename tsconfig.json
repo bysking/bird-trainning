@@ -25,7 +25,12 @@
       "@tests": ["./tests"],
       "@tests/*": ["./tests/*"]
     },
-    "types": ["jest", "unplugin-vue2-script-setup/types", "unplugin-vue2-script-setup/ref-macros"]
+    "types": [
+      "jest",
+      "unplugin-vue2-script-setup/types",
+      "unplugin-vue2-script-setup/ref-macros"
+    ],
+    "multilineDetection": "brackets"
   },
   "exclude": ["node_modules", "dist"]
 }

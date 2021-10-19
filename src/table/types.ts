@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/member-delimiter-style */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import type { PropOptions, PropType } from "vue-types/dist/types";
@@ -37,3 +38,24 @@ export const tableProps = {
 };
 
 export type TablePublicProps = IxPublicPropTypes<typeof tableProps>;
+export type SortType = "ASC" | "DESC" | ""; // 升序降序
+
+export interface TableHeaderConfig {
+  sort?: boolean; // 是否排序
+  defaultSort?: SortType; // 默认的排序 升序降序
+  [propName: string]: any;
+}
+
+interface sortMap {
+  [propName: string]: SortType;
+}
+export type TablePagePropType = {
+  singleSort?: boolean; // 单列排序 多列排序
+  tableConfig: { columns: TableHeaderConfig[] };
+  isLocalPage: boolean; // 本地分页
+  list: Record<string, any>[]; // 表格数据
+  sortFn: (
+    list: Record<string, any>[], // 排序函数
+    keyMap: sortMap
+  ) => Record<string, any>[];
+};

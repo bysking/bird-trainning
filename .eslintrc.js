@@ -86,6 +86,7 @@ module.exports = {
     "vue/max-attributes-per-line": "off",
     "vue/require-default-prop": "error",
     "vue/require-explicit-emits": "error",
+    "vue/singleline-html-element-content-newline": "off",
   },
   ignorePatterns: ["dist"],
 };

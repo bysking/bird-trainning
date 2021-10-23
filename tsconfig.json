@@ -23,7 +23,8 @@
     "allowSyntheticDefaultImports": true,
     "paths": {
       "@tests": ["./tests"],
-      "@tests/*": ["./tests/*"]
+      "@tests/*": ["./tests/*"],
+      "@/*": ["src/*"]
     },
     "types": [
       "jest",

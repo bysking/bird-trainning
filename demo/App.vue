@@ -4,14 +4,13 @@
     <button @click="testSort">测试数据排序</button>
     <button @click="testClearSort">测试清除数据</button>
     <button @click="testJumpNext">测试跳转下一页</button>
-    <TestPage :tableConfig="tableConfig" :list="list" />
+    <TestPage ref="refTable" :tableConfig="tableConfig" :list="list" />
   </div>
 </template>
 
 <script lang="ts">
 import TestPage from "../src/table/TablePage";
 import { defineComponent, ref } from "@vue/composition-api";
-import type { Ref } from "@vue/composition-api";
 
 export default defineComponent({
   name: "App",
@@ -19,7 +18,7 @@ export default defineComponent({
     TestPage,
   },
   setup() {
-    const refTable: Ref<any> = ref(null);
+    const refTable: any = ref(null);
     const tableConfig = ref({
       columns: [
         {
@@ -97,7 +96,7 @@ export default defineComponent({
     ]);
 
     const testLoad = () => {
-      refTable.value.loadData([]);
+      refTable.value?.loadData([]);
     };
 
     const testSort = () => {

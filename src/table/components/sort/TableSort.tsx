@@ -91,3 +91,18 @@ export default defineComponent<TableSortProp>({
     };
   },
 });
+
+// const renderSort = (column: any) => {
+//   if (!column.sort) {
+//     return "";
+//   }
+
+//   return (
+//     <table-sort
+//       on={{ tableSort: tableSort }}
+//       sortKey={column.key}
+//       props={{ defaultSort: curSort.value }}
+//       class="hd__sort"
+//     ></table-sort>
+//   );
+// };

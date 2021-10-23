@@ -14,7 +14,7 @@ import "./style.less";
 import { PagenationProp } from "./types";
 
 export default defineComponent<PagenationProp>({
-  name: "TablePagenation",
+  name: "TableFooter",
   props: {
     pageConfig: {
       type: Object,

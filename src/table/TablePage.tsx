@@ -4,8 +4,10 @@
 
 import { defineComponent, ref } from "@vue/composition-api";
 import type { Ref } from "@vue/composition-api";
+import TableHeader from "./components/table_header/index";
 import TableSort from "./components/sort/TableSort";
-import TablePagenation from "./components/pagination/TablePagenation";
+import TableFooter from "./components/table_footer/index";
+import TableBody from "./components/table_body/index";
 import { cloneDeep, orderBy } from "lodash";
 import "./style.less";
 import { TablePagePropType, TableHeaderConfig, SortType } from "./types";
@@ -45,7 +47,9 @@ export default defineComponent<TablePagePropType>({
   },
   components: {
     TableSort,
-    TablePagenation,
+    TableFooter,
+    TableHeader,
+    TableBody,
   },
   setup(props) {
     const singleSortKey = ref("");
@@ -62,6 +66,7 @@ export default defineComponent<TablePagePropType>({
 
       return obj;
     };
+
     let obj = getSortObj();
     const curSort: Ref<Record<string, SortType>> = ref(obj);
     const tableTotalList: Ref<Record<string, any>[]> = ref([]);
@@ -73,6 +78,7 @@ export default defineComponent<TablePagePropType>({
         [singleSortKey.value]: "ASC",
       };
     }
+
     const tableSort = (sortKey: string, sort: SortType) => {
       if (props.singleSort) {
         curSort.value = {
@@ -110,36 +116,6 @@ export default defineComponent<TablePagePropType>({
       getRenderList(val);
     };
 
-    const renderSort = (column: any) => {
-      if (!column.sort) {
-        return "";
-      }
-
-      return (
-        <table-sort
-          on={{ tableSort: tableSort }}
-          sortKey={column.key}
-          props={{ defaultSort: curSort.value }}
-          class="hd__sort"
-        ></table-sort>
-      );
-    };
-
-    const renderHead = (columns: TableHeaderConfig[]) => {
-      let template = columns.map((column: TableHeaderConfig) => {
-        return (
-          <th>
-            <div class="table-hd-tr-th">
-              <div class="hd__title">{column.title}</div>
-              {renderSort(column)}
-            </div>
-          </th>
-        );
-      });
-
-      return template;
-    };
-
     const loadListByPageAjax: () => Record<string, any>[] = () => {
       return []; // cpx:todo 远程分页待做
     };
@@ -172,58 +148,49 @@ export default defineComponent<TablePagePropType>({
 
     getRenderList();
 
-    const renderBody = (
-      rowList: Record<string, any>[],
-      columns: TableHeaderConfig[]
-    ) => {
-      function renderTd(
-        row: Record<string, any>,
-        columns: TableHeaderConfig[]
-      ) {
-        let newTDS = columns.map((col) => {
-          return <td>{row[col.key]}</td>;
-        });
-
-        return newTDS;
-      }
-
-      let newRowList = renderRowList.value.map((row: Record<string, any>) => {
-        return <tr>{renderTd(row, columns)}</tr>;
-      });
-
-      return newRowList;
+    const loadData = (list: any[]) => {
+      tableTotalList.value = list;
+      getRenderList();
+      pageConfig.value = getPageConfig();
     };
 
-    const renderFoot = () => {
-      let columns = props.tableConfig.columns || [];
+    return {
+      loadData,
+      renderRowList,
+      pageConfig,
+      pageChange,
+      tableSort,
+      tableTotalList,
+    };
+  },
 
-      return (
+  render() {
+    let {
+      renderRowList,
+      pageConfig,
+      pageChange,
+      curSort,
+      tableSort,
+      tableConfig,
+    } = this;
+
+    let { columns = [] } = tableConfig;
+
+    return (
+      <table>
+        <TableHeader
+          columns={columns}
+          defaultSort={curSort}
+          on={{ tableSort: tableSort }}
+        />
+        <TableBody columns={columns} rowList={renderRowList} />
         <td colspan={columns.length}>
-          <table-pagenation
-            props={{ pageConfig: pageConfig.value }}
+          <TableFooter
+            pageConfig={pageConfig}
             on={{ pageChange: pageChange }}
-          ></table-pagenation>
+          />
         </td>
-      );
-    };
-
-    return () => {
-      let columns = props.tableConfig.columns || [];
-      return (
-        <div>
-          <table>
-            <caption>测试表格</caption>
-            <thead>
-              <tr>{renderHead(columns)}</tr>
-            </thead>
-            {/* cpx:todo 空状态处理 */}
-            <tbody>{renderBody(renderRowList.value, columns)}</tbody>
-            <tfoot>
-              <tr>{renderFoot()}</tr>
-            </tfoot>
-          </table>
-        </div>
-      );
-    };
+      </table>
+    );
   },
 });

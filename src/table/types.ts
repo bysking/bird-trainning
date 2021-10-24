@@ -29,62 +29,63 @@ export type IxPublicPropTypes<O> = O extends object
       [K in PublicOptionalKeys<O>]?: InferPropType<O[K]>;
     }
   : { [K in string]: any };
-// Props 定义在这里
-export const tableProps = {
-  tableConfig: {
-    type: Object,
-    default: true,
-  },
-};
-export type TablePublicProps = IxPublicPropTypes<typeof tableProps>;
+
 export type SortType = "ASC" | "DESC" | ""; // 升序降序
 
+// 表头列类型
 export interface TableHeaderConfig {
   sort?: boolean; // 是否排序
   defaultSort?: SortType; // 默认的排序 升序降序
   [propName: string]: any;
 }
-// 表头类型
+
+// 表头列表类型
 export const tableHeaderConfigProp = {
-  columns: [],
+  columns: {
+    type: Array as PropType<TableHeaderConfig[]>,
+    default: () => [],
+  },
 };
+
 export type IduxtableHeaderConfigProp = IxPublicPropTypes<
   typeof tableHeaderConfigProp
 >;
 
-// interface sortMap {
-//   [propName: string]: SortType;
-// }
-// export type TablePagePropType = {
-//   singleSort?: boolean; // 单列排序 多列排序
-//   tableConfig: { columns: TableHeaderConfig[] };
-//   isLocalPage: boolean; // 本地分页
-//   list: Record<string, any>[]; // 表格数据
-//   sortFn: (
-//     list: Record<string, any>[], // 排序函数
-//     keyMap: sortMap
-//   ) => Record<string, any>[];
-// };
+interface sortMap {
+  [propName: string]: SortType;
+}
 
+// 排序函数类型
+type sortFnType<T extends { [key: string]: any }> = (
+  list: T[],
+  keyMap: sortMap
+) => T[];
+
+// 表格组件的prop类型
 export const TablePagePropType = {
   singleSort: {
+    // 单列排序 多列排序
     type: Boolean,
     default: true,
-  }, // 单列排序 多列排序
+  },
   tableConfig: {
-    type: Object,
+    // 表格头配置
+    type: Object as PropType<{ columns: TableHeaderConfig[] }>,
     default: { columns: [] },
   },
   isLocalPage: {
+    // 本地分页
     type: Boolean,
     default: true,
-  }, // 本地分页
+  },
   list: {
-    type: Array,
+    // 表格数据
+    type: Array as PropType<Record<string, any>[]>,
     default: [],
-  }, // 表格数据
+  },
   sortFn: {
-    type: Function,
+    // 排序函数
+    type: Function as PropType<null | sortFnType<Record<string, any>>>,
     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
     default: null,
   },
@@ -96,12 +97,12 @@ export type TablePagePropTypeSetUp = IxPublicPropTypes<
 
 export const tableBodyConfigProp = {
   columns: {
-    type: Array,
+    type: Array as PropType<TableHeaderConfig[]>,
     default: () => [],
   },
   rowList: {
     // 表格数据
-    type: Array,
+    type: Array as PropType<Record<string, any>[]>,
     default: () => [],
   },
 };

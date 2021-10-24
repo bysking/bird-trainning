@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/member-delimiter-style */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -51,21 +52,56 @@ export type IduxtableHeaderConfigProp = IxPublicPropTypes<
   typeof tableHeaderConfigProp
 >;
 
-interface sortMap {
-  [propName: string]: SortType;
-}
-export type TablePagePropType = {
-  singleSort?: boolean; // 单列排序 多列排序
-  tableConfig: { columns: TableHeaderConfig[] };
-  isLocalPage: boolean; // 本地分页
-  list: Record<string, any>[]; // 表格数据
-  sortFn: (
-    list: Record<string, any>[], // 排序函数
-    keyMap: sortMap
-  ) => Record<string, any>[];
+// interface sortMap {
+//   [propName: string]: SortType;
+// }
+// export type TablePagePropType = {
+//   singleSort?: boolean; // 单列排序 多列排序
+//   tableConfig: { columns: TableHeaderConfig[] };
+//   isLocalPage: boolean; // 本地分页
+//   list: Record<string, any>[]; // 表格数据
+//   sortFn: (
+//     list: Record<string, any>[], // 排序函数
+//     keyMap: sortMap
+//   ) => Record<string, any>[];
+// };
+
+export const TablePagePropType = {
+  singleSort: {
+    type: Boolean,
+    default: true,
+  }, // 单列排序 多列排序
+  tableConfig: {
+    type: Object,
+    default: { columns: [] },
+  },
+  isLocalPage: {
+    type: Boolean,
+    default: true,
+  }, // 本地分页
+  list: {
+    type: Array,
+    default: [],
+  }, // 表格数据
+  sortFn: {
+    type: Function,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    default: null,
+  },
 };
 
+export type TablePagePropTypeSetUp = IxPublicPropTypes<
+  typeof TablePagePropType
+>;
+
 export const tableBodyConfigProp = {
-  columns: [], // 表头配置
-  rowList: [], // 表格数据
+  columns: {
+    type: Array,
+    default: () => [],
+  },
+  rowList: {
+    // 表格数据
+    type: Array,
+    default: () => [],
+  },
 };

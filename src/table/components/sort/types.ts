@@ -1,9 +1,17 @@
 /* eslint-disable @typescript-eslint/member-delimiter-style */
-import { SortType } from "../../types";
+import { IxPublicPropTypes } from "../../types";
 
-export interface TableSortProp {
-  sortKey: string;
+export const TableSortProp = {
+  sortKey: {
+    type: String,
+    default: "",
+    required: true,
+  },
   defaultSort: {
-    [propName: string]: SortType;
-  };
-}
+    type: Object,
+    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+    default: () => ({}),
+  },
+};
+
+export type TableSortPropType = IxPublicPropTypes<typeof TableSortProp>;

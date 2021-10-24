@@ -10,7 +10,12 @@ import TableFooter from "./components/table_footer/index";
 import TableBody from "./components/table_body/index";
 import { cloneDeep, orderBy } from "lodash";
 import "./style.less";
-import { TablePagePropType, TableHeaderConfig, SortType } from "./types";
+import {
+  TablePagePropType,
+  TableHeaderConfig,
+  SortType,
+  TablePagePropTypeSetUp,
+} from "./types";
 
 const SORT_FN = (list: any[], keyMap: string): any[] => {
   let key: any = Object.keys(keyMap)[0]; // 排序字段
@@ -18,46 +23,22 @@ const SORT_FN = (list: any[], keyMap: string): any[] => {
   return orderBy(list, [key], [keyVal]); // todo 可以支持多维度排序
 };
 
-export default defineComponent<TablePagePropType>({
+export default defineComponent({
   name: "TablePage",
-  props: {
-    singleSort: {
-      type: Boolean, // 是否单个字段排序
-      default: true,
-    },
-    tableConfig: {
-      // 表格配置
-      type: Object,
-      default: function () {
-        return {};
-      },
-    },
-    isLocalPage: {
-      type: Boolean,
-      default: true,
-    },
-    list: {
-      type: Array,
-      default: () => [],
-    },
-    sortFn: {
-      type: Function,
-      default: null,
-    },
-  },
+  props: TablePagePropType,
   components: {
     TableSort,
     TableFooter,
     TableHeader,
     TableBody,
   },
-  setup(props) {
+  setup(props: TablePagePropTypeSetUp) {
     const singleSortKey = ref("");
     const getSortObj: () => Record<string, SortType> = () => {
-      let columns = props.tableConfig.columns || [];
+      let columns = props.tableConfig?.columns || [];
       let obj: Record<string, SortType> = {};
 
-      columns.forEach((col: TableHeaderConfig) => {
+      columns?.forEach((col: TableHeaderConfig) => {
         if (col.sort) {
           obj[col.key] = col.defaultSort || "";
           singleSortKey.value = col.key;
@@ -69,7 +50,7 @@ export default defineComponent<TablePagePropType>({
 
     let obj = getSortObj();
     const curSort: Ref<Record<string, SortType>> = ref(obj);
-    const tableTotalList: Ref<Record<string, any>[]> = ref([]);
+    const tableTotalList: Ref<(Record<string, any> | unknown)[]> = ref([]);
 
     tableTotalList.value = cloneDeep(props.list || []);
 
@@ -125,7 +106,7 @@ export default defineComponent<TablePagePropType>({
       return sortFn(list, curSort.value);
     };
 
-    const handleListByPage = (list: Record<string, any>[]) => {
+    const handleListByPage = (list: (Record<string, any> | unknow)[]) => {
       let { pageSize, pageNo } = pageConfig.value;
 
       let start = (pageNo - 1) * pageSize;
@@ -174,7 +155,7 @@ export default defineComponent<TablePagePropType>({
       tableConfig,
     } = this;
 
-    let { columns = [] } = tableConfig;
+    let { columns = [] } = tableConfig || {};
 
     return (
       <table>

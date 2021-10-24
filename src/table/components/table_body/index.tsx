@@ -8,18 +8,17 @@ export default defineComponent({
   setup(props) {
     return {
       headerColumns: props.columns || [],
-      rows: props.rowList || [],
     };
   },
 
   render() {
-    const { headerColumns, rows } = this as any;
-    return renderBody(rows, headerColumns);
+    const { columns, rowList } = this as any;
+    return <tbody>{renderBody(rowList, columns)}</tbody>;
   },
 });
 
 const renderBody = (
-  rowList: Record<string, any>[],
+  rowList: (Record<string, any> | unknown)[],
   columns: TableHeaderConfig[]
 ) => {
   function renderTd(row: Record<string, any>, columns: TableHeaderConfig[]) {
@@ -34,5 +33,5 @@ const renderBody = (
     return <tr>{renderTd(row, columns)}</tr>;
   });
 
-  return <tbody>{newRowList}</tbody>;
+  return newRowList;
 };

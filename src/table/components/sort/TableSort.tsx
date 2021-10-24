@@ -4,37 +4,34 @@
 
 import { defineComponent, computed, ref, watch } from "@vue/composition-api";
 import "./style.less";
-import { TableSortProp } from "./types";
+import { TableSortProp, TableSortPropType } from "./types";
 
 const SORT_KEY = {
   ASC: "ASC",
   DESC: "DESC",
 };
 
-export default defineComponent<TableSortProp>({
+export default defineComponent({
   name: "TableSort",
-  props: {
-    sortKey: {
-      type: String,
-      default: "",
-    },
-    defaultSort: {
-      type: Object,
-      default: () => ({}),
-    },
-  },
-  setup(props, { emit }) {
+  props: TableSortProp,
+  setup(props: TableSortPropType, { emit }) {
     const activeKey = ref("");
 
     watch(
       () => props.defaultSort,
       () => {
-        let sort = props.defaultSort[props.sortKey];
+        let sort = getSort();
         if (props.defaultSort && !sort) {
           activeKey.value = "";
         }
       }
     );
+
+    const getSort: () => "ASC" | "DESC" = () => {
+      let { sortKey = "", defaultSort = {} } = props;
+      let sort = defaultSort[sortKey];
+      return sort;
+    };
 
     const setSortKey = (key: string) => {
       if (activeKey.value === key) {
@@ -50,8 +47,7 @@ export default defineComponent<TableSortProp>({
     };
 
     if (props.defaultSort) {
-      let sort = props.defaultSort[props.sortKey];
-
+      let sort = getSort();
       sort && setSortKey(sort);
     }
 

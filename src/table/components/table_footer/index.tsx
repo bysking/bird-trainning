@@ -11,25 +11,15 @@ import {
   Ref,
 } from "@vue/composition-api";
 import "./style.less";
-import { PagenationProp } from "./types";
+import { TableFooterProps, TableFooterPropsType } from "./types";
 
-export default defineComponent<PagenationProp>({
+export default defineComponent({
   name: "TableFooter",
-  props: {
-    pageConfig: {
-      type: Object,
-      default: () => ({
-        pageSize: 10, //一页的数据条数
-        pageNo: 1, //当前页的索引
-        total: 300, //总的数据条数
-        pageTotal: 30, //总的页数
-      }),
-    },
-  },
+  props: TableFooterProps,
   components: {},
-  setup(props, { emit }) {
+  setup(props: TableFooterPropsType, { emit }) {
     const pageTotal: ComputedRef<number> = computed(() => {
-      const config = props.pageConfig;
+      const config = props.pageConfig || {};
       if (config.pageTotal) {
         return config.pageTotal;
       } else {
@@ -40,7 +30,7 @@ export default defineComponent<PagenationProp>({
         }
       }
     });
-    const curPage = ref(props.pageConfig.pageNo);
+    const curPage = ref(props.pageConfig?.pageNo);
 
     watch(
       () => curPage.value,

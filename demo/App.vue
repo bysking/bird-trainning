@@ -1,16 +1,17 @@
 <template>
   <div>
-    <button @click="testLoad">测试加载数据</button>
-    <button @click="testSort">测试数据排序</button>
-    <button @click="testClearSort">测试清除数据</button>
-    <button @click="testJumpNext">测试跳转下一页</button>
-    <TestPage ref="refTable" :tableConfig="tableConfig" :list="list" />
+    <button class="test-btn" @click="testLoad">加载数据</button>
+    <button class="test-btn" @click="testSort">数据排序</button>
+    <button class="test-btn" @click="testClearSort">清除数据</button>
+    <button class="test-btn" @click="testJumpNext">跳转下一页</button>
+    <test-page ref="refTable" :tableConfig="tableConfig" :list="list" />
   </div>
 </template>
 
 <script lang="ts">
-import TestPage from "../src/table/TablePage";
 import { defineComponent, ref } from "@vue/composition-api";
+import type { Ref } from "@vue/composition-api";
+import TestPage from "../src/table/TablePage";
 
 export default defineComponent({
   name: "App",
@@ -18,7 +19,7 @@ export default defineComponent({
     TestPage,
   },
   setup() {
-    const refTable: any = ref(null);
+    const refTable: Ref<typeof TestPage | null> = ref(null);
     const tableConfig = ref({
       columns: [
         {
@@ -96,19 +97,29 @@ export default defineComponent({
     ]);
 
     const testLoad = () => {
-      refTable.value?.loadData([]);
+      const list = Array(20)
+        .fill(1)
+        .map((item) => {
+          return {
+            name: `${Math.random()}Jon Snow5`,
+            age: 86,
+            address: `${item},Ottawa No. 2 Lake Park`,
+            date: "2016-10-04",
+          };
+        });
+      refTable.value?.loadData(list);
     };
 
     const testSort = () => {
-      refTable.value.setTableSort([]);
+      refTable.value?.setTableSort([]);
     };
 
     const testClearSort = () => {
-      refTable.value.clearTableSort();
+      refTable.value?.clearTableSort();
     };
 
     const testJumpNext = () => {
-      refTable.value.pageMoveNext();
+      refTable.value?.pageMoveNext();
     };
 
     return {
@@ -123,3 +134,16 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="less" scoped>
+.test-btn {
+  background: #00e;
+  margin: 8px;
+  padding: 2px 4px;
+  border-radius: 10%;
+  color: #fff;
+
+  & + & {
+    margin-left: 8px;
+  }
+}
+</style>

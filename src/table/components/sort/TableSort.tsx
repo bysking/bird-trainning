@@ -5,6 +5,7 @@
 import { defineComponent, computed, ref, watch } from "@vue/composition-api";
 import "./style.less";
 import { TableSortProp, TableSortPropType } from "./types";
+import { SortType } from "../../types";
 
 const SORT_KEY = {
   ASC: "ASC",
@@ -22,12 +23,12 @@ export default defineComponent({
       () => {
         let sort = getSort();
         if (props.defaultSort && !sort) {
-          activeKey.value = "";
+          activeKey.value = ""; // 指定非当前列排序则清除当前列的排序
         }
       }
     );
 
-    const getSort: () => "ASC" | "DESC" = () => {
+    const getSort: () => SortType = () => {
       let { sortKey = "", defaultSort = {} } = props;
       let sort = defaultSort[sortKey];
       return sort;
@@ -74,31 +75,16 @@ export default defineComponent({
             id="upSort"
             onClick={clickSort.bind(this, SORT_KEY.ASC)}
           >
-            u
+            ^
           </div>
           <div
             class={dhdClass.value}
             onClick={clickSort.bind(this, SORT_KEY.DESC)}
           >
-            d
+            v
           </div>
         </div>
       );
     };
   },
 });
-
-// const renderSort = (column: any) => {
-//   if (!column.sort) {
-//     return "";
-//   }
-
-//   return (
-//     <table-sort
-//       on={{ tableSort: tableSort }}
-//       sortKey={column.key}
-//       props={{ defaultSort: curSort.value }}
-//       class="hd__sort"
-//     ></table-sort>
-//   );
-// };

@@ -99,3 +99,26 @@ test("测试表格跳转第二页", () => {
 //   // wrapper.vm.排序属性对象为 { name: '' }
 //   // 表格已经清除排序，表格name对应的列表现为升序默认的顺序
 // });
+
+const loadTableData = () => {
+  const wrapper = mount(TestTable, {
+    propsData: {
+      tableConfig,
+      list,
+      singleSort: false,
+      isLocalPage: false,
+    },
+  });
+  wrapper.vm.loadData(list);
+
+  return wrapper;
+};
+
+test("测试表格", () => {
+  const wrapper = loadTableData();
+  expect(() => {
+    wrapper.vm.tableSort("age", "DESC");
+    wrapper.vm.getSortObj();
+    wrapper.vm.loadListByPageAjax();
+  }).not.toThrow();
+});

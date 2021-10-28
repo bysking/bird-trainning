@@ -8,8 +8,8 @@ import {
   computed,
   watch,
   ComputedRef,
-  Ref,
 } from "@vue/composition-api";
+import type { Ref } from "@vue/composition-api";
 import "./style.less";
 import { TableFooterProps, TableFooterPropsType } from "./types";
 
@@ -19,18 +19,18 @@ export default defineComponent({
   components: {},
   setup(props: TableFooterPropsType, { emit }) {
     const pageTotal: ComputedRef<number> = computed(() => {
-      const config = props.pageConfig || {};
-      if (config.pageTotal) {
+      const config = props.pageConfig;
+      if (config?.pageTotal) {
         return config.pageTotal;
       } else {
-        if (config.pageSize && config.total) {
+        if (config?.pageSize && config.total) {
           return Math.ceil(config.total / config.pageSize);
         } else {
           return 0;
         }
       }
     });
-    const curPage = ref(props.pageConfig?.pageNo);
+    const curPage = ref(props.pageConfig?.pageNo || 0);
 
     watch(
       () => curPage.value,

@@ -51,14 +51,14 @@ export type IduxtableHeaderConfigProp = IxPublicPropTypes<
   typeof tableHeaderConfigProp
 >;
 
-interface sortMap {
+export interface sortMapType {
   [propName: string]: SortType;
 }
 
 // 排序函数类型
 type sortFnType<T extends { [key: string]: any }> = (
   list: T[],
-  keyMap: sortMap
+  keyMap: sortMapType
 ) => T[];
 
 // 表格组件的prop类型

@@ -1,4 +1,5 @@
 import { defineComponent } from "@vue/composition-api";
+import { VNode } from "vue";
 import { TableHeaderConfig, tableBodyConfigProp } from "../../types";
 
 export default defineComponent({
@@ -18,7 +19,7 @@ export default defineComponent({
 });
 
 const renderBody = (
-  rowList: (Record<string, any> | unknown)[],
+  rowList: (Record<string, any> | unknown | VNode)[],
   columns: TableHeaderConfig[]
 ) => {
   function renderTd(row: Record<string, any>, columns: TableHeaderConfig[]) {
@@ -29,7 +30,7 @@ const renderBody = (
     return newTDS;
   }
 
-  let newRowList = rowList.map((row: Record<string, any>) => {
+  let newRowList = rowList.map((row: any) => {
     return <tr>{renderTd(row, columns)}</tr>;
   });
 

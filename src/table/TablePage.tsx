@@ -142,6 +142,8 @@ export default defineComponent({
       pageChange,
       tableSort,
       tableTotalList,
+      loadListByPageAjax,
+      getSortObj,
     };
   },
 

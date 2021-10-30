@@ -4,7 +4,7 @@ import TableSort from "../table/components/sort/TableSort";
 describe("TableSort", () => {
   const TableMount = (options) => mount(TableSort, options);
 
-  test("render", () => {
+  test("测试正常渲染,无失败", () => {
     // 测试正常渲染
     const wrapper = TableMount();
     expect(() => {
@@ -14,9 +14,17 @@ describe("TableSort", () => {
   });
 
   it("sortKey test", () => {
-    const wrapper = mount(TableSort);
-
-    expect(wrapper.vm.sortKey).toBe("");
+    const wrapper = mount(TableSort, {
+      propsData: {
+        sortKey: "name",
+        defaultSort: {
+          name: "ASC",
+        },
+      },
+    });
+    expect(wrapper.vm.sortKey).toBe("name");
+    wrapper.vm.clickSort("DESC");
+    expect(wrapper.vm.activeKey).toBe("DESC");
   });
 
   it("test sort not throw err", () => {
@@ -30,10 +38,29 @@ describe("TableSort", () => {
     });
 
     expect(() => {
-      wrapper.vm.initSort();
-      wrapper.vm.getSort();
+      wrapper.vm.getSort({
+        sortKey: "name",
+        defaultSort: {
+          test: "ASC",
+        },
+      });
       wrapper.vm.setSortKey();
       wrapper.vm.clickSort();
+    }).not.toThrow();
+  });
+
+  test("测试正常渲染,无失败", () => {
+    // 测试正常渲染
+    const wrapper = TableMount({
+      propsData: {
+        sortKey: "name",
+        defaultSort: {
+          name: "ASC",
+        },
+      },
+    });
+    expect(() => {
+      wrapper.vm.getSort();
     }).not.toThrow();
   });
 });

@@ -6,17 +6,21 @@ import {
   defineComponent,
   computed,
   ref,
-  watch,
   ComputedRef,
 } from "@vue/composition-api";
 import "./style.less";
 import { TableSortProp, TableSortPropType } from "./types";
 import { SortType } from "../../types";
+import Logger from "js-logger";
+Logger.useDefaults();
 
 const SORT_KEY = {
   ASC: "ASC",
   DESC: "DESC",
 };
+
+const ACTIVE_CLASS = "sort__link sort__active";
+const INACTIVE_CLASS = "sort__link";
 
 export default defineComponent({
   name: "TableSort",
@@ -24,26 +28,14 @@ export default defineComponent({
   setup(props: TableSortPropType, { emit }) {
     const activeKey = ref("");
 
-    watch(
-      () => props.defaultSort,
-      () => {
-        initSort();
-      }
-    );
-
-    const initSort = () => {
-      let sort = getSort();
-      if (props.defaultSort && !sort) {
-        activeKey.value = ""; // 指定非当前列排序则清除当前列的排序
-      }
-    };
-
-    const getSort: () => SortType = () => {
-      let { sortKey = "", defaultSort = {} } = props;
+    const getSort: (props: TableSortPropType) => SortType = () => {
+      let sortKey = props.sortKey || "";
+      let defaultSort = props.defaultSort || {};
       let sort = defaultSort[sortKey];
       return sort;
     };
 
+    // 设置排序值
     const setSortKey = (key: string) => {
       if (activeKey.value === key) {
         activeKey.value = "";
@@ -52,38 +44,44 @@ export default defineComponent({
       }
     };
 
+    if (props.defaultSort) {
+      let sort = getSort(props);
+      sort && setSortKey(sort);
+
+      if (!sort) {
+        Logger.warn(
+          "can not find correct sortMap value in setSortKey function"
+        );
+      }
+    }
+
+    // 点击排序
     const clickSort = (key: string) => {
       setSortKey(key);
       emit("tableSort", props.sortKey, activeKey.value);
     };
 
-    if (props.defaultSort) {
-      let sort = getSort();
-      sort && setSortKey(sort);
-    }
-
     const getActiveByKey = (key: string) => {
       return key === activeKey.value;
     };
 
+    // 升序激活类名
     const uhdClass: ComputedRef<string> = computed(() => {
-      return getActiveByKey(SORT_KEY.ASC)
-        ? "sort__link sort__active"
-        : "sort__link";
+      return getActiveByKey(SORT_KEY.ASC) ? ACTIVE_CLASS : INACTIVE_CLASS;
     });
+
+    // 降序激活class
     const dhdClass: ComputedRef<string> = computed(() => {
-      return getActiveByKey(SORT_KEY.DESC)
-        ? "sort__link sort__active"
-        : "sort__link";
+      return getActiveByKey(SORT_KEY.DESC) ? ACTIVE_CLASS : INACTIVE_CLASS;
     });
 
     return {
       uhdClass,
       dhdClass,
-      initSort,
       clickSort,
       getSort,
       setSortKey,
+      activeKey,
     };
   },
 

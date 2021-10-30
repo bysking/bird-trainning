@@ -115,11 +115,13 @@ const loadTableData = () => {
   return wrapper;
 };
 
-test("测试表格", () => {
+test("测试表格方法调用无异常", () => {
   const wrapper = loadTableData();
   expect(() => {
     wrapper.vm.tableSort("age", "DESC");
     wrapper.vm.getSortObj();
     wrapper.vm.loadListByPageAjax();
+    wrapper.vm.clearTableSort();
+    wrapper.vm.moveNext();
   }).not.toThrow();
 });

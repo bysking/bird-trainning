@@ -137,11 +137,6 @@ export default defineComponent({
       pageConfig.value = getPageConfig();
     };
 
-    const setTableSort = () => {
-      let sortType = Math.floor(10 * Math.random()) % 2 === 0 ? "ASC" : "DESC";
-      refTableHeader.value?.sortFn("age", sortType);
-    };
-
     const clearTableSort = () => {
       //
       loadData([]);
@@ -157,7 +152,6 @@ export default defineComponent({
       tableSort,
       loadListByPageAjax,
       getSortObj,
-      setTableSort,
       clearTableSort,
       refTableFooter,
       refTableHeader,

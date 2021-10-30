@@ -30,7 +30,7 @@ export default defineComponent({
         }
       }
     });
-    const curPage = ref(props.pageConfig?.pageNo || 0);
+    const curPage = ref(Number(props.pageConfig?.pageNo));
 
     watch(
       () => curPage.value,
@@ -56,7 +56,7 @@ export default defineComponent({
 
     const showList: Ref<number[]> = ref([]);
 
-    const renderPage = () => {
+    const setShowList = () => {
       let showListTotal = Array(pageTotal.value)
         .fill(1)
         .map((item, index) => index + 1);
@@ -66,11 +66,6 @@ export default defineComponent({
       if (showListTotal.length && !showList.value.includes(curPage.value)) {
         if (curPage.value < showLength) {
           showList.value = showListTotal.slice(0, showLength);
-        } else if (curPage.value + showLength > showListTotal.length) {
-          showList.value = showListTotal.slice(
-            showListTotal.length - showLength,
-            showListTotal.length
-          );
         } else {
           showList.value = showListTotal.slice(
             curPage.value - 1,
@@ -78,8 +73,16 @@ export default defineComponent({
           );
         }
       }
+    };
 
-      return showList.value.map((item: number) => {
+    const renderPage = () => {
+      setShowList();
+      return renderPageDomByList();
+    };
+
+    const renderPageDomByList = () => {
+      let list = showList.value;
+      return list.map((item: number) => {
         return (
           <span
             class={
@@ -92,6 +95,7 @@ export default defineComponent({
         );
       });
     };
+
     return {
       curPage,
       pageTotal,

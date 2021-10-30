@@ -15,19 +15,17 @@ export default defineComponent({
       emit("tableSort", key, type);
     };
     return {
-      headerColumns: props.columns || [],
       sortFn,
     };
   },
 
   render() {
-    const { headerColumns, sortFn } = this;
-    return renderHead(headerColumns as any, sortFn);
+    const { columns, sortFn } = this;
+    return renderHead(columns as any, sortFn);
   },
 });
 
 const renderSort = (column: TableHeaderConfig, sortFn: any) => {
-  console.log(column);
   return (
     <TableSort
       on={{ tableSort: sortFn }}

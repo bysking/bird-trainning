@@ -96,7 +96,7 @@ export default defineComponent({
     ]);
 
     const testLoad = () => {
-      const list = Array(20)
+      const list = Array(40)
         .fill(1)
         .map((item) => {
           return {

@@ -34,6 +34,8 @@ export default defineComponent({
   },
   setup(props: TablePagePropTypeSetUp) {
     const singleSortKey = ref("");
+    const refTableFooter = ref(null);
+    const refTableHeader = ref(null);
     const getSortObj: () => Record<string, SortType> = () => {
       let columns = props.tableConfig?.columns || [];
       let obj: Record<string, SortType> = {};
@@ -49,7 +51,7 @@ export default defineComponent({
     };
 
     let obj = getSortObj();
-    const curSort: Ref<Record<string, SortType>> = ref(obj);
+    const curSort: Ref<Record<string, SortType | string>> = ref(obj);
     const tableTotalList: Ref<(Record<string, any> | unknown)[]> = ref([]);
 
     tableTotalList.value = cloneDeep(props.list || []);
@@ -135,15 +137,34 @@ export default defineComponent({
       pageConfig.value = getPageConfig();
     };
 
+    const setTableSort = () => {
+      let sortType = Math.floor(10 * Math.random()) % 2 === 0 ? "ASC" : "DESC";
+      refTableHeader.value?.sortFn("age", sortType);
+    };
+
+    const clearTableSort = () => {
+      //
+      loadData([]);
+    };
+
+    const moveNext = () => {
+      refTableFooter.value?.moveNext();
+    };
+
     return {
       loadData,
-      renderRowList,
-      pageConfig,
       pageChange,
       tableSort,
-      tableTotalList,
       loadListByPageAjax,
       getSortObj,
+      setTableSort,
+      clearTableSort,
+      refTableFooter,
+      refTableHeader,
+      renderRowList,
+      pageConfig,
+      tableTotalList,
+      moveNext,
     };
   },
 
@@ -162,6 +183,7 @@ export default defineComponent({
     return (
       <table>
         <TableHeader
+          ref="refTableHeader"
           columns={columns}
           defaultSort={curSort}
           on={{ tableSort: tableSort }}
@@ -169,6 +191,7 @@ export default defineComponent({
         <TableBody columns={columns} rowList={renderRowList} />
         <td colspan={columns.length}>
           <TableFooter
+            ref="refTableFooter"
             pageConfig={pageConfig}
             on={{ pageChange: pageChange }}
           />

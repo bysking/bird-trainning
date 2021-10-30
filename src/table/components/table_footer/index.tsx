@@ -92,21 +92,30 @@ export default defineComponent({
         );
       });
     };
-    return () => {
-      return (
-        <div class="pagenation-wrap">
-          <div class="page-btn-cur">
-            当前页码： {curPage.value}/{pageTotal.value}
-          </div>
-          <div class="page-btn-click" onClick={moveFront}>
-            上一页
-          </div>
-          <div class="page-num-list">{renderPage()}</div>
-          <div class="page-btn-click" onClick={moveNext}>
-            下一页
-          </div>
-        </div>
-      );
+    return {
+      curPage,
+      pageTotal,
+      moveFront,
+      renderPage,
+      moveNext,
+      moveToPage,
     };
+  },
+
+  render() {
+    return (
+      <div class="pagenation-wrap">
+        <div class="page-btn-cur">
+          当前页码： {this.curPage}/{this.pageTotal}
+        </div>
+        <div class="page-btn-click" onClick={this.moveFront}>
+          上一页
+        </div>
+        <div class="page-num-list">{this.renderPage()}</div>
+        <div class="page-btn-click" onClick={this.moveNext}>
+          下一页
+        </div>
+      </div>
+    );
   },
 });

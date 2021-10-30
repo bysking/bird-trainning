@@ -71,7 +71,9 @@ export const TablePagePropType = {
   tableConfig: {
     // 表格头配置
     type: Object as PropType<{ columns: TableHeaderConfig[] }>,
-    default: { columns: [] },
+    default: () => {
+      return { columns: [] };
+    },
   },
   isLocalPage: {
     // 本地分页
@@ -81,7 +83,9 @@ export const TablePagePropType = {
   list: {
     // 表格数据
     type: Array as PropType<Record<string, any>[]>,
-    default: [],
+    default: () => {
+      return [];
+    },
   },
   sortFn: {
     // 排序函数

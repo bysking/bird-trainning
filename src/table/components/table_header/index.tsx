@@ -27,7 +27,6 @@ export default defineComponent({
 });
 
 const renderSort = (column: TableHeaderConfig, sortFn: any) => {
-  console.log(column);
   return (
     <TableSort
       on={{ tableSort: sortFn }}

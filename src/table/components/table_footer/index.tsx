@@ -23,6 +23,7 @@ export default defineComponent({
       if (config?.pageTotal) {
         return config.pageTotal;
       } else {
+        console.log(config?.pageSize, config?.total);
         if (config?.pageSize && config.total) {
           return Math.ceil(config.total / config.pageSize);
         } else {

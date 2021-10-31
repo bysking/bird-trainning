@@ -1,5 +1,4 @@
 import { mount } from "@vue/test-utils";
-// import { shallowMount } from "@vue/test-utils";
 import TestHeader from "../table/components/table_header/index";
 
 const getWrapperDm = () => {

@@ -1,6 +1,8 @@
 import { defineComponent } from "@vue/composition-api";
 import { VNode } from "vue";
 import { TableHeaderConfig, tableBodyConfigProp } from "../../types";
+import Logger from "js-logger";
+Logger.useDefaults();
 
 export default defineComponent({
   name: "TableBody",
@@ -15,6 +17,7 @@ export default defineComponent({
         row: Record<string, any>,
         columns: TableHeaderConfig[]
       ) {
+        Logger.info("渲染表格行，当前", row);
         let newTDS = columns.map((col) => {
           return <td>{row[col.key]}</td>;
         });

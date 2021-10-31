@@ -12,6 +12,8 @@ import {
 import type { Ref } from "@vue/composition-api";
 import "./style.less";
 import { TableFooterProps, TableFooterPropsType } from "./types";
+import Logger from "js-logger";
+Logger.useDefaults();
 
 export default defineComponent({
   name: "TableFooter",
@@ -23,10 +25,10 @@ export default defineComponent({
       if (config?.pageTotal) {
         return config.pageTotal;
       } else {
-        console.log(config?.pageSize, config?.total);
         if (config?.pageSize && config.total) {
           return Math.ceil(config.total / config.pageSize);
         } else {
+          Logger.info("暂无分页数据");
           return 0;
         }
       }

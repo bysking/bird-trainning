@@ -37,6 +37,7 @@ export default defineComponent({
 
     // 设置排序值
     const setSortKey = (key: string) => {
+      Logger.info("设置排序字段值", key);
       if (activeKey.value === key) {
         activeKey.value = "";
       } else {
@@ -45,14 +46,9 @@ export default defineComponent({
     };
 
     if (props.defaultSort) {
+      Logger.info("设置默认排序", props.defaultSort);
       let sort = getSort(props);
       sort && setSortKey(sort);
-
-      if (!sort) {
-        Logger.warn(
-          "can not find correct sortMap value in setSortKey function"
-        );
-      }
     }
 
     // 点击排序

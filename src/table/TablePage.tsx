@@ -16,6 +16,7 @@ import {
   SortType,
   TablePagePropTypeSetUp,
 } from "./types";
+import { useProps } from "./hooks";
 
 const SORT_FN = (list: any[], keyMap: string): any[] => {
   let key: any = Object.keys(keyMap)[0]; // 排序字段
@@ -33,29 +34,10 @@ export default defineComponent({
     TableBody,
   },
   setup(props: TablePagePropTypeSetUp) {
-    const singleSortKey = ref("");
+    let { singleSortKey, getSortObj, curSort, tableTotalList } =
+      useProps(props);
     const refTableFooter = ref(null);
     const refTableHeader = ref(null);
-    const getSortObj: () => Record<string, SortType> = () => {
-      let columns = props.tableConfig?.columns;
-      let obj: Record<string, SortType> = {};
-
-      columns?.forEach((col: TableHeaderConfig) => {
-        if (col.sort) {
-          obj[col.key] = col.defaultSort as SortType;
-          singleSortKey.value = col.key;
-        }
-      });
-
-      return obj;
-    };
-
-    let obj = getSortObj();
-    const curSort: Ref<Record<string, SortType | string>> = ref(obj);
-    const tableTotalList: Ref<(Record<string, any> | unknown)[] | undefined> =
-      ref([]);
-
-    tableTotalList.value = cloneDeep(props.list);
 
     if (props.singleSort) {
       curSort.value = {

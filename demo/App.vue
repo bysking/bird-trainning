@@ -2,7 +2,6 @@
   <div>
     <button class="test-btn" @click="testLoad">加载数据</button>
     <button class="test-btn" @click="testClearSort">清除数据</button>
-    <button class="test-btn" @click="testJumpNext">跳转下一页</button>
     <test-page ref="refTable" :tableConfig="tableConfig" :list="list" />
   </div>
 </template>
@@ -117,10 +116,6 @@ export default defineComponent({
       refTable.value?.clearTableSort();
     };
 
-    const testJumpNext = () => {
-      refTable.value?.moveNext();
-    };
-
     return {
       refTable,
       testLoad,
@@ -128,7 +123,6 @@ export default defineComponent({
       tableConfig,
       list,
       testClearSort,
-      testJumpNext,
     };
   },
 });

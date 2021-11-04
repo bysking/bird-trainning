@@ -26,7 +26,7 @@ describe("TablePagenation", () => {
     const wrapper = TableMount({
       propData: {
         pageSize: 3,
-        pageNo: 2,
+        pageNo: 1,
         total: 10,
         pageTotal: 10,
       },
@@ -37,6 +37,13 @@ describe("TablePagenation", () => {
       wrapper.vm.moveNext();
       wrapper.vm.moveToPage(1);
     }).not.toThrow();
+
+    wrapper.vm.moveToPage(2);
+    expect(wrapper.vm.curPage).toBe(2);
+
+    wrapper.vm.moveToPage(2);
+    wrapper.vm.moveFront();
+    expect(wrapper.vm.curPage).toBe(1);
   });
 
   test("测试超出分页限制", () => {
@@ -52,6 +59,7 @@ describe("TablePagenation", () => {
 
     expect(() => {
       wrapper.vm.moveToPage(10);
+      expect(wrapper.vm.curPage).toBe(10);
       wrapper.vm.defaultSort = "DESC";
     }).not.toThrow();
   });
@@ -150,4 +158,6 @@ test("异常值3", () => {
     wrapper.vm.moveToPage(1);
     wrapper.vm.defaultSort = "DESC";
   }).not.toThrow();
+
+  expect(wrapper.vm.curPage).toBe(1);
 });

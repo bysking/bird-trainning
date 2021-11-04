@@ -48,11 +48,6 @@ describe("Table", () => {
       wrapper.vm.$destroy();
     }).not.toThrow();
   });
-
-  it("div exist", () => {
-    // const wrapper = mount(TestTable);
-    // expect(wrapper.contains("table-hd-tr-th")).toBe(false);
-  });
 });
 
 test("测试表格的loadData方法能不能正常加载数据", () => {
@@ -62,8 +57,14 @@ test("测试表格的loadData方法能不能正常加载数据", () => {
       list,
     },
   });
-  wrapper.vm.loadData(list);
-  // 表格已经成功渲染，检测表格实例的渲染数据有值，并且和list内容相等
+  expect(() => {
+    wrapper.vm.loadData(list);
+  }).not.toThrow();
+
+  const loadList = wrapper.vm.tableTotalList;
+  const loadListStr = loadList.toString();
+  const originListStr = list.toString();
+  expect(originListStr).toBe(loadListStr); // 表格已经成功渲染，检测表格实例的渲染数据有值，并且和list内容相等
 });
 
 test("测试表格的排序", () => {
@@ -74,8 +75,12 @@ test("测试表格的排序", () => {
     },
   });
   wrapper.vm.loadData(list);
-  wrapper.vm.tableSort("name", "ASC");
-  // 表格已经成功排序，表格name对应的列表现为升序高亮，展示内容暗战升序排序
+  wrapper.vm.tableSort("age", "ASC");
+
+  // 检测排序组件的类名，todo 处理响应式class
+  const domtext = wrapper.find("#upSort").html();
+  const isActive = !domtext.includes("sort__active");
+  expect(isActive).toBeTruthy();
 });
 
 test("测试表格跳转第二页", () => {
@@ -87,7 +92,7 @@ test("测试表格跳转第二页", () => {
   });
   wrapper.vm.loadData(list);
   wrapper.vm.pageChange(2);
-  // 表格已经成功排序，表格name对应的列表现为升序高亮，展示内容暗战升序排序
+  // expect(wrapper.vm.getCurrentPage()).toBe(2); todo
 });
 
 const loadTableData = () => {

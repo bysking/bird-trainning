@@ -16,7 +16,9 @@ const getWrapperDm = () => {
 
 test("测试表格", () => {
   const wrapper = getWrapperDm();
-  expect(() => {
-    wrapper.vm.sortFn("name", "DESC");
-  }).not.toThrow();
+  wrapper.vm.sortFn("age", "DESC");
+
+  // 判断样式是否渲染： 获取dom 的样式， 判断存在， exect进行值断言
+  const classExist = !wrapper.classes("sort-wrap");
+  expect(classExist).toBeTruthy();
 });

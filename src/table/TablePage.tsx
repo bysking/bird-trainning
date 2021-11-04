@@ -37,12 +37,12 @@ export default defineComponent({
     const refTableFooter = ref(null);
     const refTableHeader = ref(null);
     const getSortObj: () => Record<string, SortType> = () => {
-      let columns = props.tableConfig?.columns || [];
+      let columns = props.tableConfig?.columns;
       let obj: Record<string, SortType> = {};
 
       columns?.forEach((col: TableHeaderConfig) => {
         if (col.sort) {
-          obj[col.key] = col.defaultSort || "";
+          obj[col.key] = col.defaultSort as SortType;
           singleSortKey.value = col.key;
         }
       });
@@ -52,9 +52,10 @@ export default defineComponent({
 
     let obj = getSortObj();
     const curSort: Ref<Record<string, SortType | string>> = ref(obj);
-    const tableTotalList: Ref<(Record<string, any> | unknown)[]> = ref([]);
+    const tableTotalList: Ref<(Record<string, any> | unknown)[] | undefined> =
+      ref([]);
 
-    tableTotalList.value = cloneDeep(props.list || []);
+    tableTotalList.value = cloneDeep(props.list);
 
     if (props.singleSort) {
       curSort.value = {
@@ -76,7 +77,7 @@ export default defineComponent({
     // 处理本地分页的页面配置计算
     const getPageConfig = () => {
       let defaultPageSize = 4; // 默认分页数量，可以抽成配置项
-      let listLen = (tableTotalList.value || []).length;
+      let listLen = tableTotalList.value?.length;
 
       let isIntPage = listLen % defaultPageSize === 0;
       let tempPage = Math.floor(listLen / defaultPageSize);
@@ -172,7 +173,7 @@ export default defineComponent({
       tableConfig,
     } = this;
 
-    let { columns = [] } = tableConfig || {};
+    let { columns } = tableConfig as any;
 
     return (
       <table>

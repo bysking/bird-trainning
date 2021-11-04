@@ -30,8 +30,8 @@ export default defineComponent({
 
     const getSort: (props: TableSortPropType) => SortType = () => {
       let sortKey = props.sortKey || "";
-      let defaultSort = props.defaultSort || {};
-      let sort = defaultSort[sortKey];
+      let defaultSort = props.defaultSort;
+      let sort = defaultSort && defaultSort[sortKey];
       return sort;
     };
 
@@ -45,11 +45,9 @@ export default defineComponent({
       }
     };
 
-    if (props.defaultSort) {
-      Logger.info("设置默认排序", props.defaultSort);
-      let sort = getSort(props);
-      sort && setSortKey(sort);
-    }
+    Logger.info("设置默认排序", props.defaultSort);
+    let sort = getSort(props);
+    sort && setSortKey(sort);
 
     // 点击排序
     const clickSort = (key: string) => {

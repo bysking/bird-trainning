@@ -99,4 +99,14 @@ describe("TableBody", () => {
       wrapper.vm.$destroy();
     }).not.toThrow();
   });
+
+  test("测试数据渲染正确", () => {
+    const wrapper = getWrapperDm();
+    const renderListStr = wrapper.vm.rowList.toString();
+    const propListPreviewFour = list.toString();
+
+    // 切片数据：已经分页，是总数居的一个子集
+    const isNormal = propListPreviewFour.includes(renderListStr);
+    expect(isNormal).toBeTruthy();
+  });
 });

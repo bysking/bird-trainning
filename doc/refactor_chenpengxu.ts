@@ -5,8 +5,9 @@
 import logger from "logger";
 
 type FileType = any; // 文件类型
+type FileTypeAllow = "exe" | "txt" | "doc";
 type TypeUploadMap = {
-  [propName: string]: (
+  [propName in FileTypeAllow]: (
     file: string,
     cb: (ret: boolean) => void | boolean | undefined
   ) => Promise<boolean> | boolean | void;
@@ -24,9 +25,9 @@ function readFile(path: string): Promise<unknown | any> {
   });
 }
 
-function getFileType(file: string): string {
+function getFileType(file: string): FileTypeAllow {
   // 获取文件类型，在不同的场景
-  return (file.match(/\.(\w+)$/) || [])[1];
+  return (file.match(/\.(\w+)$/) || [])[1] as FileTypeAllow;
 }
 
 // 上传类
@@ -57,7 +58,7 @@ class UploadController {
   }
 
   // 获取文件类型
-  private getFileType(file: string) {
+  private getFileType(file: string): FileTypeAllow {
     return getFileType(file);
   }
 
@@ -80,7 +81,7 @@ class UploadController {
       });
   }
 
-  public uploadByType(type: string, file: any) {
+  public uploadByType(type: FileTypeAllow, file: any) {
     const uploadFn = this.uploadMap[type];
     if (!uploadFn) {
       logger.error(

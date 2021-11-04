@@ -100,10 +100,6 @@ export default defineComponent({
       getRenderList(val);
     };
 
-    const loadListByPageAjax: () => Record<string, any>[] = () => {
-      return []; // cpx:todo 远程分页待做
-    };
-
     const handleListSort = (list: Record<string, any>[]) => {
       let sortFn = props.sortFn || SORT_FN;
       return sortFn(list, curSort.value);
@@ -124,9 +120,6 @@ export default defineComponent({
         list = handleListSort(list); // 处理
         // 本地 分页
         renderRowList.value = list;
-      } else {
-        // 远程分页
-        renderRowList.value = loadListByPageAjax();
       }
     };
 
@@ -143,15 +136,10 @@ export default defineComponent({
       loadData([]);
     };
 
-    const moveNext = () => {
-      refTableFooter.value?.moveNext();
-    };
-
     return {
       loadData,
       pageChange,
       tableSort,
-      loadListByPageAjax,
       getSortObj,
       clearTableSort,
       refTableFooter,
@@ -159,7 +147,6 @@ export default defineComponent({
       renderRowList,
       pageConfig,
       tableTotalList,
-      moveNext,
     };
   },
 

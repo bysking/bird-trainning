@@ -111,11 +111,11 @@ const loadTableData = () => {
 
 test("测试表格方法调用无异常", () => {
   const wrapper = loadTableData();
-  expect(() => {
-    wrapper.vm.tableSort("age", "DESC");
-    wrapper.vm.getSortObj();
-    wrapper.vm.loadListByPageAjax();
-    wrapper.vm.clearTableSort();
-    wrapper.vm.moveNext();
-  }).not.toThrow();
+  wrapper.vm.clearTableSort();
+  const loadList = wrapper.vm.tableTotalList;
+  const loadListLen = loadList.length;
+  expect(loadListLen).toBe(0); // 清除数据后表格数据长度应该是0， 数据长度是0
+  wrapper.vm.tableSort("age", "ASC");
+  const rr = wrapper.vm.getSortObj();
+  expect(rr).toEqual({ age: "ASC" });
 });

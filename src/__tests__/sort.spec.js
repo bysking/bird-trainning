@@ -27,7 +27,7 @@ describe("TableSort", () => {
     expect(wrapper.vm.activeKey).toBe("DESC");
   });
 
-  it("test sort not throw err", () => {
+  it("测试设置排序字段值正确", () => {
     const wrapper = mount(TableSort, {
       propsData: {
         sortKey: "name",
@@ -37,19 +37,17 @@ describe("TableSort", () => {
       },
     });
 
-    expect(() => {
-      wrapper.vm.getSort({
-        sortKey: "name",
-        defaultSort: {
-          test: "ASC",
-        },
-      });
-      wrapper.vm.setSortKey();
-      wrapper.vm.clickSort();
-    }).not.toThrow();
+    wrapper.vm.getSort({
+      sortKey: "name",
+      defaultSort: {
+        test: "ASC",
+      },
+    });
+    wrapper.vm.setSortKey("DESC");
+    expect(wrapper.vm.activeKey).toBe("DESC");
   });
 
-  test("测试正常渲染,无失败", () => {
+  test("测试prop参数正确赋值", () => {
     // 测试正常渲染
     const wrapper = TableMount({
       propsData: {
@@ -59,8 +57,8 @@ describe("TableSort", () => {
         },
       },
     });
-    expect(() => {
-      wrapper.vm.getSort();
-    }).not.toThrow();
+
+    const rr = wrapper.vm.getSort();
+    expect(rr).toBe("ASC");
   });
 });

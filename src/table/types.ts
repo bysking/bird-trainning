@@ -110,3 +110,7 @@ export const tableBodyConfigProp = {
     default: () => [],
   },
 };
+
+export type IduxtableBodyConfigProp = IxPublicPropTypes<
+  typeof tableBodyConfigProp
+>;

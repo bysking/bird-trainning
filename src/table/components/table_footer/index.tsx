@@ -12,6 +12,7 @@ import {
 import type { Ref } from "@vue/composition-api";
 import "./style.less";
 import { TableFooterProps, TableFooterPropsType } from "./types";
+import { useProps } from "./hook";
 import Logger from "js-logger";
 Logger.useDefaults();
 
@@ -33,7 +34,7 @@ export default defineComponent({
         }
       }
     });
-    const curPage = ref(Number(props.pageConfig?.pageNo));
+    let { curPage } = useProps(props);
 
     watch(
       () => curPage.value,

@@ -2,6 +2,7 @@ import { defineComponent } from "@vue/composition-api";
 import { VNode } from "vue";
 import { TableHeaderConfig, tableBodyConfigProp } from "../../types";
 import Logger from "js-logger";
+import { useColumns } from "./hook";
 Logger.useDefaults();
 
 export default defineComponent({
@@ -32,13 +33,16 @@ export default defineComponent({
       return newRowList;
     };
 
+    let columnHook = useColumns(props);
+
     return {
       renderBody,
+      columnHook,
     };
   },
 
   render() {
-    const { columns, rowList } = this as any;
-    return <tbody>{this.renderBody(rowList, columns)}</tbody>;
+    const { columnHook, rowList } = this as any;
+    return <tbody>{this.renderBody(rowList, columnHook)}</tbody>;
   },
 });
